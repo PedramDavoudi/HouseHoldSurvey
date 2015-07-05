@@ -1,5 +1,5 @@
 function [n]=nPr(Y)
-
+% return the number of provinces
 if Y<=72
     n=24;
 elseif Y<=74
