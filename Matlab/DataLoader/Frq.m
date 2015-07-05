@@ -1,4 +1,11 @@
 function [f]=Frq(Y,r,s)
+% return the frequncy of table
+% Y is the year
+% r is isrural
+% s is the table number
+% f=1 means data is for one year
+% f=12 means data is for one month
+% f=365 mean data is for one day
 switch s
     case 14
         f=1;
