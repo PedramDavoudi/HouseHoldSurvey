@@ -1,4 +1,5 @@
 function [X89]=codep(Y,r,Fname)
+% return the some houshold infomation
 [~, Rg ,~]=init1(Y,r); % initial Value
 disp(['Loading ' Rg num2str(Y) 'P1']);
 %%
@@ -8,9 +9,9 @@ disp(['Loading ' Rg num2str(Y) 'P1']);
 Data.Region(:,1)=r;
 
 %clear Du Dr;
- Data.Year(:,1)=Y;
-disp('Load Done'); 
-%{ 
+Data.Year(:,1)=Y;
+disp('Load Done');
+%{
 to ensure about cols' name
 %}
 Data.Properties.VarNames{1} = 'Address';
@@ -65,22 +66,22 @@ X89.HH=X89.male+X89.female;
 X89.F_H=X89.female./X89.HH;
 clear ah fm;
 disp('count ages between 16-64');
- % count ages 16-64
+% count ages 16-64
 ag = dataset(Data.Address,Data.DYCOL05);%dataset(Data(2:end,1),[cell2mat(Data(2:end,5)) Data(1,5)] );
- ag.Properties.VarNames{1} = 'Address';
- ag.Properties.VarNames{2} = 'DYCOL05';
+ag.Properties.VarNames{1} = 'Address';
+ag.Properties.VarNames{2} = 'DYCOL05';
 X89 = join(X89, grpstats(ag(and(ag.('DYCOL05')>15,ag.('DYCOL05')<65),1),'Address'),'key','Address','Type','outer','MergeKeys',true);
 X89.Properties.VarNames{end} = 'B16_64';
 X89.B16_64(isnan(X89.B16_64))=0;
 X89.W_H=X89.B16_64./X89.HH;
 %%%statarray =grpstats(ds,{'Sex','Smoker'},{'min','max'},'DataVars','Weight')%this is an example
 clear ag aa Data;
- % count education
- disp('count education');
+% count education
+disp('count education');
 %%{
- ed=dataset(X89.Address,X89.DYCOL08);
- ed.Properties.VarNames{1} = 'Address';
- ed.Properties.VarNames{2} = 'DYCOL08';
+ed=dataset(X89.Address,X89.DYCOL08);
+ed.Properties.VarNames{1} = 'Address';
+ed.Properties.VarNames{2} = 'DYCOL08';
 e1=grpstats(ed(ed.('DYCOL08')<=410,1),'Address');
 %e1.Properties.VarNames{2} = 'UnderD';
 e2=grpstats(ed(and(ed.('DYCOL08')==411,ed.('DYCOL08')==412),1),'Address');
@@ -93,11 +94,11 @@ e5=grpstats(ed(and(ed.('DYCOL08')>=514,ed.('DYCOL08')<=516),1),'Address');
 %e5.Properties.VarNames{2} = 'MS';
 e6=grpstats(ed(and(ed.('DYCOL08')>=517,ed.('DYCOL08')<=606),1),'Address');
 %e6.Properties.VarNames{2} = 'PHD';
- e1 = join(e1,e2,'key','Address','Type','outer','MergeKeys',true);
- e3 = join(e3,e4,'key','Address','Type','outer','MergeKeys',true);
- e5 = join(e5,e6,'key','Address','Type','outer','MergeKeys',true);
- e1 = join(e1,e3,'key','Address','Type','outer','MergeKeys',true);
- e1 = join(e1,e5,'key','Address','Type','outer','MergeKeys',true);
+e1 = join(e1,e2,'key','Address','Type','outer','MergeKeys',true);
+e3 = join(e3,e4,'key','Address','Type','outer','MergeKeys',true);
+e5 = join(e5,e6,'key','Address','Type','outer','MergeKeys',true);
+e1 = join(e1,e3,'key','Address','Type','outer','MergeKeys',true);
+e1 = join(e1,e5,'key','Address','Type','outer','MergeKeys',true);
 
 e1.Properties.VarNames{2} = 'UnderD';
 e1.Properties.VarNames{3} = 'Dipl';
@@ -118,8 +119,8 @@ disp('Recognize province');
 X89.Province=cellfun(@(x)x(2:3),X89.Address, 'UniformOutput' , false);
 disp('Dummy for every province');
 for i=0:35
-x=find(str2num(cell2mat(X89.Province))==i);
- X89.(['P' num2str(i)])(x,1)=1;
+    x=find(str2num(cell2mat(X89.Province))==i);
+    X89.(['P' num2str(i)])(x,1)=1;
 end
 %------------------------------------------------------
 %%

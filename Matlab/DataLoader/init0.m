@@ -11,16 +11,16 @@ else
 end
 %%
 
-if Y > 88 
+if Y > 88
     Fname = [num2str(Y) '.accdb'];% '"89\89.accdb"
-else%if Y > 82 
+else%if Y > 82
     Fname = [num2str(Y) '.mdb'];
-%else
- %   Fname = [num2str(Y) '\DATA' num2str(Y) ]; %'.dbf'
-end 
+    %else
+    %   Fname = [num2str(Y) '\DATA' num2str(Y) ]; %'.dbf'
+end
 Fname=[Adres Fname];
 %%
 %{
-[FileName,PathName,~] = uigetfile('*.*');% get file location 
+[FileName,PathName,~] = uigetfile('*.*');% get file location
 Fname=[PathName FileName];
 %}

@@ -44,7 +44,7 @@ switch s
     case 1
         if Y>68
             f=12;
-        elseif Y>62 
+        elseif Y>62
             if r==0
                 f=365;
             else
@@ -52,5 +52,5 @@ switch s
             end
         end
     otherwise
-        f=0;  
+        f=0;
 end

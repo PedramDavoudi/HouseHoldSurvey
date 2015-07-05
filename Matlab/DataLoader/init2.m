@@ -1,6 +1,7 @@
 function [nm]=init2(i)
-if i < 10 
-nm = ['0' num2str(i)];
+% standadize number in 2 letters string
+if i < 10
+    nm = ['0' num2str(i)];
 else
-nm = num2str(i);
-end 
+    nm = num2str(i);
+end

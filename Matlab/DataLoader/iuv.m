@@ -1,4 +1,5 @@
 function [Res]=iuv(X14)
+% im not sure about this code
 %this will calc integrated unit value
 [M_tp ,~  ,~]=init1(X14.Year(1),1);
 %add new var
@@ -6,20 +7,20 @@ X14.Constant=ones(size(X14,1),1);
 X14.x=X14.S01./X14.HH;
 X15=X14;
 if M_tp==14
-     X14.nFv=X14.S02Count+X14.S03Count+X14.S04Count+X14.S05Count+X14.S06Count+X14.S07Count+X14.S08Count+X14.S09Count+X14.S11Count+X14.S12Count+X14.S13Count+X14.S14Count;
-     X14.nFc=X14.S02./Frq(X14.Year,X14.Region,2)+X14.S03+X14.S04+X14.S05+X14.S06+X14.S07+X14.S08+X14.S09+X14.S11+X14.S12+X14.S13+X14.S14;
+    X14.nFv=X14.S02Count+X14.S03Count+X14.S04Count+X14.S05Count+X14.S06Count+X14.S07Count+X14.S08Count+X14.S09Count+X14.S11Count+X14.S12Count+X14.S13Count+X14.S14Count;
+    X14.nFc=X14.S02./Frq(X14.Year,X14.Region,2)+X14.S03+X14.S04+X14.S05+X14.S06+X14.S07+X14.S08+X14.S09+X14.S11+X14.S12+X14.S13+X14.S14;
 elseif M_tp==10
-     X14.nFv=X14.S02Count+X14.S03Count+X14.S04Count+X14.S05Count+X14.S06Count+X14.S07Count+X14.S08Count+X14.S09Count+X14.S10Count;
-     X14.nFc=X14.S02./Frq(X14.Year,X14.Region,2)+X14.S03./Frq(X14.Year,X14.Region,3)+X14.S04./Frq(X14.Year,X14.Region,4)+X14.S05./Frq(X14.Year,X14.Region,5)+X14.S06./Frq(X14.Year,X14.Region,6)+X14.S07./Frq(X14.Year,X14.Region,7)+X14.S08./Frq(X14.Year,X14.Region,8)+X14.S09./Frq(X14.Year,X14.Region,9)+X14.S10./Frq(X14.Year,X14.Region,10);
+    X14.nFv=X14.S02Count+X14.S03Count+X14.S04Count+X14.S05Count+X14.S06Count+X14.S07Count+X14.S08Count+X14.S09Count+X14.S10Count;
+    X14.nFc=X14.S02./Frq(X14.Year,X14.Region,2)+X14.S03./Frq(X14.Year,X14.Region,3)+X14.S04./Frq(X14.Year,X14.Region,4)+X14.S05./Frq(X14.Year,X14.Region,5)+X14.S06./Frq(X14.Year,X14.Region,6)+X14.S07./Frq(X14.Year,X14.Region,7)+X14.S08./Frq(X14.Year,X14.Region,8)+X14.S09./Frq(X14.Year,X14.Region,9)+X14.S10./Frq(X14.Year,X14.Region,10);
 elseif M_tp==9
     X14.nFv=X14.S02Count+X14.S03Count+X14.S04Count+X14.S05Count+X14.S06Count+X14.S07Count+X14.S08Count+X14.S09Count;
     X14.nFc=X14.S02+X14.S03+X14.S04+X14.S05+X14.S06+X14.S07+X14.S08+X14.S09;
 else
-     X14.nFv=0;
-     X14.nFc=0;
+    X14.nFv=0;
+    X14.nFc=0;
 end
- X14.nFp= X14.nFc./X14.nFv;
- X14.Fp= (X14.S01./Frq(X14.Year,X14.Region,1))./X14.S01Count;
+X14.nFp= X14.nFc./X14.nFv;
+X14.Fp= (X14.S01./Frq(X14.Year,X14.Region,1))./X14.S01Count;
 %% remove usless var
 X14.nFc=[];
 X14.nFv=[];
@@ -112,7 +113,7 @@ Res(2)=ols(Y(:,2),X);
 Res(1).Headers=Tl;
 Res(2).Headers=Tl;
 for i=1:2
- %   c(i)=Res(1,i).beta(strcmp(Res(1,i).Headers, 'Constant'));
+    %   c(i)=Res(1,i).beta(strcmp(Res(1,i).Headers, 'Constant'));
     p(:,i)=Res(1,i).beta(strcmp(Res(1,i).Headers, 'Constant'))+Res(1,i).resid;%C+resid
 end
 clear X14 Res X Y ;
