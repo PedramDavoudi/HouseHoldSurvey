@@ -1,6 +1,7 @@
 function [Res]=HCost(StartYear,EndYear)
+% it is the main function
 % This Would Caculate House Buying cost
-% Runner
+
 tic;
 %{
 [FileName,PathName,~] = uigetfile('*.*');% get file location 
@@ -66,20 +67,11 @@ for Y=StartYear:EndYear
  else
     Res=vertcat(Res,X);
  end
-   % TT=TU;
-   
-   % clear TR TU;
-  %  TT.Year=Y*ones(size(TT.Address,1));
-  %  disp('Exporting . . . ');
- %   export(TT,'XLSfile',['T' num2str(Y)]);
- %   eval(['T' num2str(Y) '=TT;']);
-  % clear TT;
   
 end
    disp('Exporting . . . ');
-    export(Res,'XLSfile',['Dur' num2str(StartYear) '.xlsx']);
-    
- %Cat=[  {'Year'}, {'WRent'}, {'WPrice'}, {'WEnsurance'} , {'Rent'}, {'Price'}, {'Ensurance'}];
+   export(Res,'XLSfile',['Dur' num2str(StartYear) '.xlsx']);
+  
 a=toc;
 clc;
 disp(['All Done in ' num2str(fix(a/60)) ':' num2str(a-60*fix(a/60))]);
