@@ -19,7 +19,8 @@ years_to_extract <- setdiff(years,existing_file_list)
 
 
 if(Settings$OS=="windows"){
-  cmdline <- paste0(normalizePath("../exe/7z/7z.exe")," e -y ")
+  cmdline <- paste0(normalizePath("../exe/unrar/UnRAR.exe")," e -y ") # Use unrar binary
+  #cmdline <- paste0(normalizePath("../exe/7z/7z.exe")," e -y ")      # Use 7-zip binary
 }
 
 cwd <- getwd()
@@ -28,13 +29,13 @@ setwd("temp")
 for(year in years_to_extract)
 {
   file.copy(from = paste0(Settings$HIESRARPath,year,".rar"),to = ".")
-  system(paste0("../../exe/7z/7z.exe e -y ",year,".rar"))
-  l <- dir(pattern=glob2rx("*.mdb"))
+  system(paste0(cmdline,year,".rar"))
+  l <- dir(pattern=glob2rx("*.mdb"),ignore.case = TRUE)
   if(length(l)>0){
     file.rename(from = l,to = paste0(year,".mdb"))
     file.copy(from = paste0(year,".mdb"),to = paste0(Settings$HIESRAWPath,year,".mdb"))
   }
-  l <- dir(pattern=glob2rx("*.accdb"))
+  l <- dir(pattern=glob2rx("*.accdb"),ignore.case = TRUE)
   if(length(l)>0){
     file.rename(from = l,to = paste0(year,".accdb"))
     file.copy(from = paste0(year,".accdb"),to = paste0(Settings$HIESRAWPath,year,".accdb"))
