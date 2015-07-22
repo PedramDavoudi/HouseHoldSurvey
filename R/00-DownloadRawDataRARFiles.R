@@ -1,5 +1,16 @@
+# 00-DownloaRawDataRARFiles.R
+# downloads the RAR files that are not present in the folder 
+# specified in Settings file
+#
+# Copyright © 2015: Majid Einian
+# Licence: GPL-3
+
+rm(list=ls())
+
 library(yaml)
 Settings <- yaml.load_file("Settings.yaml")
+
+
 file_list_rar <- list.files(Settings$HIESRARPath)
 years <- Settings$startyear:Settings$endyear
 needed_rars <- paste0(years,".rar")
