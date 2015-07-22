@@ -1,9 +1,9 @@
 HIESPath: D:/MajidFiles/HEIS/
 HIESRARPath: D:/MajidFiles/HEIS/RARs/
-HIESRAWPath: D:/MajidFiles/HEIS/RAW/
+HIESRAWPath: D:/MajidFiles/HEIS/DataRAW/
 HIESSummaryPath: D:/MajidFiles/HEIS/Summary/
-startyear: 70.0
+startyear: 63.0
 endyear: 92.0
-os: windows
+OS: windows
 RawDataWebAddress: http://www.amar.org.ir/Portals/0/amarmozuii/hazinedaramad/
 
