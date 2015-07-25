@@ -49,5 +49,7 @@ unlink("temp",recursive = TRUE,force = TRUE)
 existing_file_list <- tools::file_path_sans_ext(list.files(Settings$HIESRAWPath))
 years <- Settings$startyear:Settings$endyear
 years_had_error <- setdiff(years,existing_file_list)
-cat("\n------------------\nFollowing years had errors; you have to provide the *.mdb files manually for these years:\n")
-cat(years_had_error)
+if (length(years_had_error)>0 ){
+  cat("\n------------------\nFollowing years had errors; you have to provide the *.mdb files manually for these years:\n")
+  cat(years_had_error)
+}
