@@ -1,8 +1,9 @@
 library(yaml)
-Settings <- list(HIESPath       ="D:/MajidFiles/HEIS/",
-                 HIESRARPath    ="D:/MajidFiles/HEIS/RARs/",
-                 HIESRAWPath    ="D:/MajidFiles/HEIS/DataRAW/",
-                 HIESSummaryPath="D:/MajidFiles/HEIS/Summary/",
+Settings <- list(HEISPath       ="D:/HEIS/",
+                 HEISRARPath    ="D:/HEIS/RARs/",
+                 HEISRAWPath    ="D:/HEIS/DataRAW/",
+                 HEISSummaryPath="D:/HEIS/Summary/",
+                 HEISDataPath   ="D:/HEIS/DataProcessed/",
                  startyear=63,
                  endyear=92,
                  OS="windows",
