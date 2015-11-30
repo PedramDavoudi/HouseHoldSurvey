@@ -24,21 +24,65 @@ library(RODBC)
 library(foreign)
 library(data.table)
 
-load(Settings$weightsFile)
-
-
 # For Years 1363 to 1386 ----------------------------------------------
-for(year in 63:75)
-{
-  
-}
-for(year in 76:86)
+for(year in 63:86)
 {
   cat(paste0("\n------------------------------\nYear:",year,"\n"))
-  HHBase <- AllWeights[Year==year]
+  if(year %in% 63:75){
+    UD <- data.table(read.dbf(paste("../DataSummary/1363-1375/U",year,"_SUM.DBF",sep=""),as.is = TRUE))[,c("ZONE","OSTAN","HOUSEHOLD"),with=FALSE]
+    RD <- data.table(read.dbf(paste("../DataSummary/1363-1375/R",year,"_SUM.DBF",sep=""),as.is = TRUE))[,c("ZONE","OSTAN","HOUSEHOLD"),with=FALSE]
+  }else if(year %in% c(76:80,83:86)){
+    if(year==76){
+      Query <-"Select R_U, OSTAN, BLOCK, KHANEVAR from [Sum"
+    }else if(year %in% 77:80){
+      Query <-  "Select R_U, OSTAN, SHAHRESTAN, BLOCK, KHANEVAR from [Sum"
+    }else if(year %in% 83:86){
+      Query <- "Select Address from [Sum"
+    }
+    cnxu <- odbcConnectExcel2007(paste("../DataSummary/13",year,"/SumU",year,".xlsx",sep=""))
+    UD <- data.table(sqlQuery(cnxu,query=paste(Query,"U",year,"$]",sep="")))
+    close(cnxu)
+    cnxr <- odbcConnectExcel2007(paste("../DataSummary/13",year,"/SumR",year,".xlsx",sep=""))
+    RD <- data.table(sqlQuery(cnxr,query=paste(Query,"R",year,"$]",sep="")))
+    close(cnxr)
+    rm(cnxr,cnxu)
+  }else if(year %in% 81:82){
+    UD <- data.table(read.dbf(paste("../DataSummary/13",year,"/SumU",year,".dbf",sep=""),as.is=TRUE))[
+      ,c("R_U","OSTAN","SHAHRESTAN","BLOCK","KHANEVAR"),with=FALSE]
+    RD <- data.table(read.dbf(paste("../DataSummary/13",year,"/SumR",year,".dbf",sep=""),as.is=TRUE))[
+      ,c("R_U","OSTAN","SHAHRESTAN","BLOCK","KHANEVAR"),with=FALSE]
+  }
   
+  UD <- UD[, lapply(.SD, as.numeric)]
+  RD <- RD[, lapply(.SD, as.numeric)]
+  
+  
+  UD[,Region:=factor(x="Urban",levels=c("Urban","Rural"),
+                     labels=c("Urban","Rural"))]
+  RD[,Region:=factor(x="Rural",levels=c("Urban","Rural"),
+                     labels=c("Urban","Rural"))]
+  
+  cat(nrow(UD),", ",nrow(RD))
+  
+  HHBase <- rbind(RD,UD)
+  if(year %in% 63:75)
+  {
+    HHBase[,HHID:=as.numeric(paste(ZONE,sprintf("%02d", OSTAN),sprintf("%04d", HOUSEHOLD),sep=""))]
+  }
+  else if(year==76){
+    HHBase[,HHID:=as.numeric(paste(R_U,sprintf("%02d", OSTAN), KHANEVAR %/% 10000, 
+                                   sprintf("%03d",KHANEVAR %% 1000),sep=""))]
+  }else if(year %in% 77:82){
+    HHBase[,HHID:=as.numeric(paste(R_U,sprintf("%02d", OSTAN), sprintf("%02d", SHAHRESTAN),KHANEVAR %/% 10000, 
+                                   sprintf("%03d",KHANEVAR %% 1000),sep=""))]
+  }else if(year %in% 83:86){
+    setnames(HHBase,"Address","HHID")
+  }
+  
+  HHBase[,Year:=year]
   HHBase[,Quarter:=as.numeric(HHID %% 10000 %/% 1000)]
-
+  if(year==74)
+    HHBase[,Quarter:=as.numeric(HHID %% 100000 %/% 10000)]
   HHBase[,Month:=NA_integer_]
   
   HHBase <- HHBase[,c("HHID","Region","Year","Quarter","Month"),with=FALSE]
