@@ -9,13 +9,20 @@ rm(list=ls())
 
 library(yaml)
 Settings <- yaml.load_file("Settings.yaml")
+compressed_file_names_df <- read.csv(Settings$CompressedFileNamesFile,stringsAsFactors = FALSE)
 
 
-file_list_rar <- list.files(Settings$HEISRARPath)
+present_compressed_file_list <- list.files(Settings$HEISCompressedPath)
 years <- Settings$startyear:Settings$endyear
-needed_rars <- paste0(years,".rar")
 
-files_to_download <- setdiff(needed_rars,file_list_rar)
+
+
+existing_file_list <- list.files(Settings$HEISCompressedPath)
+
+needed_compressed_files_list <- compressed_file_names_df[compressed_file_names_df$Year %in% years,]$CompressedFileName
+
+
+files_to_download <- setdiff(needed_compressed_files_list,existing_file_list)
 
 if(length(files_to_download)>0){
   urls <- paste0(Settings$RawDataWebAddress,files_to_download)
