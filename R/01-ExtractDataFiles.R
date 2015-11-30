@@ -10,26 +10,31 @@ rm(list=ls())
 library(yaml)
 Settings <- yaml.load_file("Settings.yaml")
 
-dir.create(Settings$HEISRAWPath,showWarnings = FALSE)
+dir.create(Settings$HEISRawPath,showWarnings = FALSE)
+
+compressed_file_names_df <- read.csv(Settings$CompressedDataFileNamesFile,stringsAsFactors = FALSE)
 
 
-existing_file_list <- tools::file_path_sans_ext(list.files(Settings$HEISRAWPath))
+existing_file_list <- tools::file_path_sans_ext(list.files(Settings$HEISRawPath))
 years <- Settings$startyear:Settings$endyear
-years_to_extract <- setdiff(years,existing_file_list)
+
+compressed_files_list <- compressed_file_names_df[compressed_file_names_df$Year %in% years,]$CompressedFileName
+
+years_to_extract <- setdiff(compressed_files_list,existing_file_list)
 
 
 if(Settings$OS=="windows"){
-  cmdline <- paste0(normalizePath("../exe/unrar/UnRAR.exe")," e -y ") # Use unrar binary
-  #cmdline <- paste0(normalizePath("../exe/7z/7z.exe")," e -y ")      # Use 7-zip binary
+#  cmdline <- paste0(normalizePath("../exe/unrar/UnRAR.exe")," e -y ") # Use unrar binary
+   cmdline <- paste0(normalizePath("../exe/7z/7z.exe")," e -y ")      # Use 7-zip binary
 }
 
 cwd <- getwd()
 dir.create("temp")
 setwd("temp")
-for(year in years_to_extract)
+for(filename in years_to_extract)
 {
-  file.copy(from = paste0(Settings$HEISRARPath,year,".rar"),to = ".")
-  system(paste0(cmdline,year,".rar"))
+  file.copy(from = filename,to = ".")
+  system(paste0(cmdline,filename))
   l <- dir(pattern=glob2rx("*.mdb"),ignore.case = TRUE)
   if(length(l)>0){
     file.rename(from = l,to = paste0(year,".mdb"))
