@@ -12,7 +12,7 @@ Settings <- yaml.load_file("Settings.yaml")
 
 dir.create(Settings$HEISRawPath,showWarnings = FALSE)
 
-compressed_file_names_df <- read.csv(Settings$CompressedDataFileNamesFile,stringsAsFactors = FALSE)
+compressed_file_names_df <- read.csv(Settings$HEISCompressedPath,stringsAsFactors = FALSE)
 
 
 existing_file_list <- tools::file_path_sans_ext(list.files(Settings$HEISRawPath))
