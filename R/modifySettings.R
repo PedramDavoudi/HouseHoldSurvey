@@ -1,19 +1,24 @@
 library(yaml)
 HEISPath           = "D:/HEIS/"
 HEISCompressedPath = paste0(HEISPath,"DataCompressed/")
-HEISRawPath        = paste0(HEISPath,"DataRAW/")
-HEISDataPath       = paste0(HEISPath,"DataProcessed/")
+HEISAccessPath     = paste0(HEISPath,"DataAccess/")
+HEISRawPath        = paste0(HEISPath,"DataRaw/")
+HEISProcessedPath  = paste0(HEISPath,"DataProcessed/")
+D80LinkDest        = paste0(HEISAccessPath,"D80Link.accdb")
 
 
-Settings <- list(HEISPath          = HEISPath,
+Settings <- list(HEISPath          =HEISPath,
                  HEISCompressedPath=HEISCompressedPath,
+                 HEISAccessPath    =HEISAccessPath,
                  HEISRawPath       =HEISRawPath,
-                 HEISDataPath      =HEISDataPath,
+                 HEISProcessedPath =HEISProcessedPath,
                  startyear=63,
                  endyear=93,
                  OS="windows",
-                 RawDataWebAddress="http://www.amar.org.ir/Portals/0/amarmozuii/hazinedaramad/",
+                 RawDataWebAddress ="http://www.amar.org.ir/Portals/0/amarmozuii/hazinedaramad/",
                  CompressedFileNamesFile="../Data/CompressedFileNames.csv",
-                 weightsFile="../Data/AllWeights.rda"
+                 weightsFile       ="../Data/AllWeights.rda",
+                 D80LinkSource     ="../Data/D80Link.accdb",
+                 D80LinkDest       =D80LinkDest
 )
 write(as.yaml(Settings),file = "Settings.yaml")

@@ -1,11 +1,14 @@
 HEISPath: D:/HEIS/
 HEISCompressedPath: D:/HEIS/DataCompressed/
-HEISRawPath: D:/HEIS/DataRAW/
-HEISDataPath: D:/HEIS/DataProcessed/
+HEISAccessPath: D:/HEIS/DataAccess/
+HEISRawPath: D:/HEIS/DataRaw/
+HEISProcessedPath: D:/HEIS/DataProcessed/
 startyear: 63.0
 endyear: 93.0
 OS: windows
 RawDataWebAddress: http://www.amar.org.ir/Portals/0/amarmozuii/hazinedaramad/
 CompressedFileNamesFile: ../Data/CompressedFileNames.csv
 weightsFile: ../Data/AllWeights.rda
+D80LinkSource: ../Data/D80Link.accdb
+D80LinkDest: D:/HEIS/DataAccess/D80Link.accdb
 
