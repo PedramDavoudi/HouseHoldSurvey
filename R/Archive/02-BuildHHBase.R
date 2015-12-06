@@ -25,17 +25,91 @@ library(RODBC)
 library(foreign)
 library(data.table)
 
+load(Settings$weightsFile)
+
+for(year in 63:93)
+{
+  cat(paste0("\n------------------------------\nYear:",year,"\n"))
+
+  l <- dir(path=Settings$HEISRawPath, pattern=glob2rx(paste0(year,".*")),ignore.case = TRUE)
+
+  if(year==80){
+    cns<-odbcConnectAccess2007(paste0(Settings$HEISRawPath, l))
+  }else{
+    cns<-odbcConnectAccess2007(paste0(Settings$HEISRawPath, l))
+  }
+  
+  tbls <- data.table(sqlTables(cns))[TABLE_TYPE=="TABLE",]$TABLE_NAME
+
+  head(sqlTables(cns),10)  
+
+  if(year <=86){
+    Q <- "Select Address from "
+    utbl <- tbls[grepl("U\\d\\dP2",tbls)]
+    rtbl <- tbls[grepl("R\\d\\dP2",tbls)]
+  }else{
+    Q <- "Select Address, MahMorajeh from "
+    utbl <- tbls[grepl("U\\d\\dData",tbls)]
+    rtbl <- tbls[grepl("R\\d\\dData",tbls)]
+  }
+    
+  if(year==80){
+    cns2 <- 
+  }
+  U <- data.table(sqlQuery(cns,paste0(Q,utbl)))
+  R <- data.table(sqlQuery(cns,paste0(Q,rtbl)))
+  d <- sqlFetch(cns,rtbl)
+
+  tbls <- sqlTables(cns)
+  tbl <- tbls[10,3]
+  RD <- sqlQuery(cns,paste0("Select Address from ",tbl))
+  RD <- sqlQuery(cns,paste0("Select Address from [",tbl,"]"))
+  sqlQuery(cns, paste0("SELECT COUNT(*) AS n FROM [",tbl,"]"))
+  head(RD)
+  
+  close(cns)
+  
+  U <- U[, lapply(.SD, as.numeric)]
+  R <- R[, lapply(.SD, as.numeric)]
+  
+  U[,Region:=factor(x="Urban",levels=c("Urban","Rural"),
+                     labels=c("Urban","Rural"))]
+  R[,Region:=factor(x="Rural",levels=c("Urban","Rural"),
+                     labels=c("Urban","Rural"))]
+  
+  HHBase <- rbind(R,U)
+  setnames(HHBase,"Address","HHID")
+  
+  setkey(HHBase,HHID)
+  
+  HHBase[,Quarter:=as.numeric(HHID %% 10000 %/% 1000)]
+  if(year <=86){
+    HHBase[,Month:=NA_integer_]
+  }else{
+    HHBase[,Month:=ifelse(MahMorajeh==1,12,MahMorajeh-1)]
+    HHBase[,MahMorajeh:=NULL]
+  }
+  cat(nrow(U),nrow(R))
+  
+  W <- AllWeights[Year==year,c("HHID","Weight"),with=FALSE]
+  setkey(W,HHID)
+  
+  HHBase <- merge(HHBase,W,all.x = T,by="HHID")
+  save(HHBase,year,file=paste(Settings$HEISDataPath,"Y",year,"HHBase.rda",sep=""))
+}
+  
+  
 # For Years 1363 to 1386 ----------------------------------------------
 for(year in 63:86)
 {
   cat(paste0("\n------------------------------\nYear:",year,"\n"))
   if(year %in% 63:75){
-    UD <- data.table(read.dbf(paste("../DataSummary/1363-1375/U",year,"_SUM.DBF",sep=""),as.is = TRUE))[,c("ZONE","OSTAN","HOUSEHOLD"),with=FALSE]
+    UD <- data.table(read.dbf(paste0(Settings$HEISSummaryPath,"1363-1375/U",year,"_SUM.DBF",sep=""),as.is = TRUE))[,c("ZONE","OSTAN","HOUSEHOLD"),with=FALSE]
     RD <- data.table(read.dbf(paste("../DataSummary/1363-1375/R",year,"_SUM.DBF",sep=""),as.is = TRUE))[,c("ZONE","OSTAN","HOUSEHOLD"),with=FALSE]
-  }else if(year %in% c(76:80,83:86)){
+  }else if(year %in% c(76:86)){
     if(year==76){
       Query <-"Select R_U, OSTAN, BLOCK, KHANEVAR from [Sum"
-    }else if(year %in% 77:80){
+    }else if(year %in% 77:82){
       Query <-  "Select R_U, OSTAN, SHAHRESTAN, BLOCK, KHANEVAR from [Sum"
     }else if(year %in% 83:86){
       Query <- "Select Address from [Sum"
@@ -47,11 +121,6 @@ for(year in 63:86)
     RD <- data.table(sqlQuery(cnxr,query=paste(Query,"R",year,"$]",sep="")))
     close(cnxr)
     rm(cnxr,cnxu)
-  }else if(year %in% 81:82){
-    UD <- data.table(read.dbf(paste("../DataSummary/13",year,"/SumU",year,".dbf",sep=""),as.is=TRUE))[
-      ,c("R_U","OSTAN","SHAHRESTAN","BLOCK","KHANEVAR"),with=FALSE]
-    RD <- data.table(read.dbf(paste("../DataSummary/13",year,"/SumR",year,".dbf",sep=""),as.is=TRUE))[
-      ,c("R_U","OSTAN","SHAHRESTAN","BLOCK","KHANEVAR"),with=FALSE]
   }
   
   UD <- UD[, lapply(.SD, as.numeric)]
@@ -88,7 +157,7 @@ for(year in 63:86)
   
   HHBase <- HHBase[,c("HHID","Region","Year","Quarter","Month"),with=FALSE]
   
-  save(HHBase,year,file=paste("Data/Y",year,"HHBase.rda",sep=""))
+#  save(HHBase,year,file=paste("Data/Y",year,"HHBase.rda",sep=""))
 }
 
 # For Years 1387 to 1392 ----------------------------------------------
