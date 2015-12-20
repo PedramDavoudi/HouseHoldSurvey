@@ -5,6 +5,9 @@ tic;
 if nargin==1
     EndYear=StartYear;
 end
+if ~exist('out','dir')
+    mkdir ('out');
+end
 %{
 % uncomment to see the browser and choose the access file
 [FileName,PathName,~] = uigetfile('*.*');% get file location
@@ -20,8 +23,9 @@ for Y=StartYear:EndYear
     TT=vertcat(join(codec(Y,0,Fname), codep(Y,0,Fname),'key','Address','Type','outer','MergeKeys',true),join(codec(Y,1,Fname), codep(Y,1,Fname),'key','Address','Type','outer','MergeKeys',true));
     eval(['T' num2str(Y) '=TT;']);
     %export(TT,'XLSfile',['T' num2str(Y)]);
-    save(['T' num2str(Y)],['\out\T' num2str(Y)]);
-    clear TT;
+       clear TT;
+    save(['out\' num2str(Y) '.mat'], ['T' num2str(Y)]);
+ 
 end
 a=toc;
 clc;
