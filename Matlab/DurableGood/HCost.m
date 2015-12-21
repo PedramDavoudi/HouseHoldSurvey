@@ -25,11 +25,11 @@ end
 if StartYear<63
     StartYear=63;
 end
-if StartYear>92
-    StartYear=92;
+if StartYear>93
+    StartYear=93;
 end
-if EndYear>92
-    EndYear=92;
+if EndYear>93
+    EndYear=93;
 end
 if EndYear<63
     EndYear=63;
