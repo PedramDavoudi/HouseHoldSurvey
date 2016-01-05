@@ -72,7 +72,7 @@ end
 
 %%
 % catch th parameter mahe morajee
-CC = join(CC,MRet(CC.Address,Y),'key','Address','Type','outer','MergeKeys',true); %add to data collector
+CC = join(CC,MRet(CC.Address,Y,Fname,tnam),'key','Address','Type','outer','MergeKeys',true); %add to data collector
 %%
 
 aa=sum(isnan(double(CC(:,2:end))),2); %remove nan

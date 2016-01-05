@@ -1,4 +1,4 @@
-function [Result]=MRet(X,Y)
+function [Result]=MRet(X,Y,Fname,tnam)
 % this would extract the Season of moraje
 % to do;
 %   X=Housholds address
@@ -10,8 +10,8 @@ function [Result]=MRet(X,Y)
 % A.Address is assighn to X
 % A.MahMorajeh is the season when houshold  fullfill the quastinaries
 
-% Appoint which character shows the season
-if nargin==1
+
+if nargin<4
     Y=X;
 end
 
@@ -19,7 +19,7 @@ if Y<87
     if ~isa(X,'cell')
         error('I Feed by cell');
     end
-    
+    % Appoint which character shows the season
     if Y>76
         Ctr=6 ;
     elseif Y>62
@@ -27,28 +27,25 @@ if Y<87
     end
     Result=cellfun(@(x)x(Ctr),X, 'UniformOutput' , false);
     Result=dataset(X,Result);
-    Result.Properties.VarNames{1} = 'Address';
-    Result.Properties.VarNames{2} = 'MahMorajeh';
+    %Result.Properties.VarNames{1} = 'Address';
+    %Result.Properties.VarNames{2} = 'MahMorajeh';
     
 elseif Y<92
-    [~, ~, Result] = readacc( Fname,tnam(1:3));  % Read Access File
+     [~, ~, Result] = readacc( Fname,tnam(1:3));  % Read Access File
 else
-    [~, ~, Result] = readacc( Fname,[tnam(1:3) 'Data']);  % Read Access File
+     [~, ~, Result] = readacc( Fname,[tnam(1:3) 'Data']);  % Read Access File
+     Result=Result(:,{'Address' 'MahMorajeh'});
 end
 
 disp('Load MaheMoraje Done' );
-if Y<92
     %this the number of Cost table for the year between 1386:1391
     Oo=0; %M_tp(14);RsName(0,M_tp);
     Ss=Result.Properties.VarNames{size(Result,2)+Oo};% find the Header of the Golden Col
     Result.(Ss)=cell2num(Result.(Ss));
     Result.Properties.VarNames{1} = 'Address';
     Result.Properties.VarNames{2} = 'MahMorajeh';
-else
-    Ss='MahMorajeh';% find the Header of the Golden Col
-    Result.(Ss)=cell2num(Result.(Ss));%
-    Result=Result(:,{'Address' 'MahMorajeh'});
-end
+
+    
 if Y>86  %convert month to season
     Result.MahMorajeh= ceil(Result.MahMorajeh/3);
 end
