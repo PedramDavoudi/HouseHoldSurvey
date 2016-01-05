@@ -1,8 +1,8 @@
-function [Rg  Fname]=init0(Y,r)
+function [Rg,  Fname]=init0(Y,r)
 % this function return the address of file
 % do not hesitate to chnage the addreess
 % some a few changes is needed if you have diffrent data sources
-Adres = 'F:\Data\HouseHoldExpenditure\Access\';
+Adres = 'E:\Data\HouseHoldExpenditure\Access\';
 
 if r==0
     Rg='R';

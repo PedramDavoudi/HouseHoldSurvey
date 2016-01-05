@@ -8,7 +8,7 @@ CC=dataset({''}); %Data Collector will vanish after the end
 CC.Properties.VarNames{1} = 'Address';
 %%
 for i=1:M_tp
-    if Y<84
+    if Y<83
         nm=num2str(i);
     else
         nm=init2(i);
@@ -43,10 +43,9 @@ for i=1:M_tp
     %%
     % Remove Nan in Address
     Data(cellfun(@(x) any(isnan(x)),Data.Address),:)=[];
-    % in 1374 the address 00010001 becames 00
-    if Y==74
-        Data.Address=cellfun(@filladdress,Data.Address,'uniformoutput',false);
-    end
+    % in some years the address 00010001 becames 00
+    Data.Address=cellfun(@filladdress,Data.Address,'uniformoutput',false);
+    
     Data=grpstats(Data,'Address',@sum); % Income summation  for every households
     Data.GroupCount=[];%remove useless col
     Data.Properties.ObsNames=[];
@@ -72,7 +71,36 @@ end
 
 %%
 % catch th parameter mahe morajee
-CC = join(CC,MRet(CC.Address,Y),'key','Address','Type','outer','MergeKeys',true); %add to data collector
+% catch th parameter mahe morajee
+if Y<87
+    
+    
+elseif Y<92
+        [~, ~, Data] = readacc( Fname,tnam(1:3));  % Read Access File
+    else
+        [~, ~, Data] = readacc( Fname,[tnam(1:3) 'Data']);  % Read Access File
+    end
+catch %#ok<CTCH>
+    Data=MRet(CC.Address,Y);
+end
+disp('Load MaheMoraje Done' );
+if Y<92
+    Oo=RsName(0,M_tp); %Return Distance of Golden Col from last col; ocasinally the last col is the cost but sometimes is not
+    Ss=Data.Properties.VarNames{size(Data,2)+Oo};% find the Header of the Golden Col
+    Data.(Ss)=cell2num(Data.(Ss));%Data.(Ss)=str2num(char(Data.(Ss))); %#ok<*ST2NM>Data.(Ss)=str2num(cell2mat2(Data.(Ss))); %#ok<*ST2NM>
+    Data.Properties.VarNames{1} = 'Address';
+    Data.Properties.VarNames{2} = 'MahMorajeh';
+else
+    Ss='MahMorajeh';% find the Header of the Golden Col
+    Data.(Ss)=cell2num(Data.(Ss));%
+    Data=Data(:,{'Address' 'MahMorajeh'});
+end
+if Y>86  %convert month to season
+    Data.MahMorajeh= ceil(Data.MahMorajeh/3);
+end
+
+Data=unique(Data,'Address');
+CC = join(CC,Data,'key','Address','Type','outer','MergeKeys',true); %add to data collector
 %%
 
 aa=sum(isnan(double(CC(:,2:end))),2); %remove nan
@@ -83,7 +111,6 @@ disp('Cost Done');
 end
 
 function Y=filladdress(x)
-% it is just happen in year 1374
 if length(x)<4
     Y='00010001';
 else

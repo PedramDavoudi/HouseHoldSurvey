@@ -9,22 +9,17 @@ function [Result]=MRet(X,Y)
 % A=MRet(M.Address,80)
 % A.Address is assighn to X
 % A.MahMorajeh is the season when houshold  fullfill the quastinaries
-
-% Appoint which character shows the season
-if nargin==1
-    Y=X;
+if ~isa(X,'cell')
+    error('I Feed by cell');
 end
+% Appoint which character shows the season
 
 if Y<87
-    if ~isa(X,'cell')
-        error('I Feed by cell');
-    end
-    
     if Y>76
-        Ctr=6 ;
-    elseif Y>62
-        Ctr=4;
-    end
+    Ctr=6 ;
+elseif Y>62
+    Ctr=4;
+end
     Result=cellfun(@(x)x(Ctr),X, 'UniformOutput' , false);
     Result=dataset(X,Result);
     Result.Properties.VarNames{1} = 'Address';
@@ -38,8 +33,8 @@ end
 
 disp('Load MaheMoraje Done' );
 if Y<92
-    %this the number of Cost table for the year between 1386:1391
-    Oo=0; %M_tp(14);RsName(0,M_tp);
+   %this the number of Cost table for the year between 1386:1391
+    Oo= %M_tp=14;RsName(0,M_tp); 
     Ss=Result.Properties.VarNames{size(Result,2)+Oo};% find the Header of the Golden Col
     Result.(Ss)=cell2num(Result.(Ss));
     Result.Properties.VarNames{1} = 'Address';
