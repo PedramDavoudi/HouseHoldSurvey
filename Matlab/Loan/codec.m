@@ -76,30 +76,15 @@ end
        if size(CC,2)>5
             CC.(4)=[];
        end
-     %%
-
-        try
-            [~, ~, Data] = readacc( Fname,tnam(1:3));  % Read Access File        
-       catch %#ok<CTCH>
-               Data=MRet(CC.Address,Y);
-        end
-            disp('Load MaheMoraje Done' ); 
-            Oo=RsName(0,M_tp); %Return Distance of Golden Col from last col; ocasinally the last col is the cost but sometimes is not
-            Ss=Data.Properties.VarNames{size(Data,2)+Oo};% find the Header of the Golden Col
-            Data.(Ss)=cell2num(Data.(Ss));%Data.(Ss)=str2num(char(Data.(Ss))); %#ok<*ST2NM>Data.(Ss)=str2num(cell2mat2(Data.(Ss))); %#ok<*ST2NM>
-            Data.Properties.VarNames{1} = 'Address';
-            Data.Properties.VarNames{2} = 'MahMorajeh';
-            if Y>86  %convert month to season
-                Data.MahMorajeh= ceil(Data.MahMorajeh/3);
-            end
-            CC = join(CC,Data,'key','Address','Type','outer','MergeKeys',true); %add to data collector
+    
             %% 
    else
        
         CC=0; 
    end     
      
-    
+     %% MaheMoraje
+              CC = join(CC,MRet(CC.Address,Y,Fname,tnam),'key','Address','Type','outer','MergeKeys',true); %add to data collector
 disp('Cost Done');
 
 

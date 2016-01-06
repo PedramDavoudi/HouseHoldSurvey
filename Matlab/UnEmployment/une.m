@@ -89,16 +89,7 @@ for r=0:1
         Data.Region=r*ones(1,size(Data,1)).';
         %loading Data of Mahe morajee
         if Ismonth==1
-            try
-               [~, ~, MData] = readacc( Fname,[Rg num2str(Y)]);
-%               Data.Properties.VarNames{1} = 'Address';
-               MData.Properties.VarNames{1} = 'Address';
-             %  Data = join(Data,MData,'key','Address','Type','outer','MergeKeys',true);
-               MData.Properties.VarNames{end} = 'MahMorajeh';
-            catch
-                MData=MRet(Data.Address,Y);
-              
-            end
+                MData=MRet(Data.Address,Y,Fname,[Rg num2str(Y)]);
         end
         
         %----------------------------------

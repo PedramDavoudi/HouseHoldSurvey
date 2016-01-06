@@ -2,6 +2,7 @@ function [CC]=codec(Y,r,Fname)
 % Return Cost element. for the year Y in r area,
 % r=0 is rural
 % r=1 is urban
+% Fname is the file name and address
 [M_tp Rg tnam]=init1(Y,r); % initial Value
 disp(['Loading Data from ' num2str(Y) ' in ' Rg]);
 CC=dataset({''}); %Data Collector will vanish after the end
@@ -93,4 +94,8 @@ else
     disp('I''m not ready to calc Total Cost');
 end
 CC.FoodShare=CC.S01./CC.Total;
+
+% Amend Mahe Moraje
+CC = join(CC,MRet(CC.Address,Y,Fname,tnam),'key','Address','Type','outer','MergeKeys',true); 
+
 disp('Cost Done');

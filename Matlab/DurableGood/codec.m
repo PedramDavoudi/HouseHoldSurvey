@@ -63,36 +63,9 @@ end
        
   %%
  % catch th parameter mahe morajee
-        try
-            if Y<92
-            [~, ~, Data] = readacc( Fname,tnam(1:3));  % Read Access File        
-            else
-                [~, ~, Data] = readacc( Fname,[tnam(1:3) 'Data']);  % Read Access File     
-            end
-       catch %#ok<CTCH>
-               Data=MRet(CC.Address,Y);
-        end
-        disp('Load MaheMoraje Done' ); 
-        if Y<92
-            Oo=RsName(0,M_tp); %Return Distance of Golden Col from last col; ocasinally the last col is the cost but sometimes is not
-            Ss=Data.Properties.VarNames{size(Data,2)+Oo};% find the Header of the Golden Col
-            Data.(Ss)=cell2num(Data.(Ss));%Data.(Ss)=str2num(char(Data.(Ss))); %#ok<*ST2NM>Data.(Ss)=str2num(cell2mat2(Data.(Ss))); %#ok<*ST2NM>
-            Data.Properties.VarNames{1} = 'Address';
-            Data.Properties.VarNames{2} = 'MahMorajeh';
-        else
-            Ss='MahMorajeh';% find the Header of the Golden Col
-            Data.(Ss)=cell2num(Data.(Ss));%
-            Data(:,{'ShoghlSarparast','NoeKhn','Takmil','TakmilDescA','TakmilDescB','TakmilDescC','Jaygozin','JaygozinDescA','JaygozinDescB','JaygozinDescC','BlkAbdJaygozin','RadifJaygozin','fStat','fEnt','fvfy','user1','user2','user3','user4','Tekrari','Bakhsh','ShrDeh','Hozeh','BlkAbd','AbdName'}) = [];
-        end
-            if Y>86  %convert month to season
-                Data.MahMorajeh= ceil(Data.MahMorajeh/3);
-            end
-            Data=unique(Data,'Address');
-            CC = join(CC,Data,'key','Address','Type','outer','MergeKeys',true); %add to data collector
+CC = join(CC,MRet(CC.Address,Y,Fname,tnam),'key','Address','Type','outer','MergeKeys',true); %add to data collector
             %% 
-       
- 
-     CC.Region=r*ones(size(CC,1),1);
+CC.Region=r*ones(size(CC,1),1);
        
     
 disp('Cost Done');
