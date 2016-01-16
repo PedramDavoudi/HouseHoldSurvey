@@ -33,7 +33,24 @@ for i=1:M_tp
     Oo=size(Data,2);
     Data.Properties.VarNames{1}='Address';
     for o=2:Oo
-        Ss=['Y' tnam(2:end)  nm '_Col' num2str(o)];
+        if Y==69 && i==1 && o>5
+            switch o
+                case 6
+                    TabelNameCorrec=0;
+                case 7
+                    TabelNameCorrec=1;
+                case 8
+                    TabelNameCorrec=2;
+                case 9
+                    TabelNameCorrec=3;
+                otherwise
+                    TabelNameCorrec=-1;
+            end
+            
+        else
+            TabelNameCorrec=-1;
+        end
+        Ss=['Y' tnam(2:end)  nm '_Col' num2str(o+TabelNameCorrec)];
         Data.Properties.VarNames{o}=Ss;
         Data.(Ss)=cell2num(Data.(Ss));
     end
