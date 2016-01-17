@@ -99,18 +99,16 @@ for r=0:1
         %{ 
         to ensure about cols' name
         %}
+       if Y==92
+          Data(:,'DYCOL02') = []; 
+       end
+        Data.Properties.VarNames (2:7) = {'DYCOL01' ;'DYCOL03' ;'DYCOL04' ;'DYCOL05'; 'DYCOL06'  ; 'DYCOL07'  };
        
-        Data.Properties.VarNames{2} = 'DYCOL01';
-        Data.Properties.VarNames{3} = 'DYCOL03';
-        Data.Properties.VarNames{4} = 'DYCOL04';
-        Data.Properties.VarNames{5} = 'DYCOL05';%age
-        Data.Properties.VarNames{6} = 'DYCOL06';
-        Data.Properties.VarNames{7} = 'DYCOL07';
-        Data.Properties.VarNames{8} = 'DYCOL08';
         if Y<66
              Data.Properties.VarNames{9} = 'DYCOL056';%is important; 1:shagel 2:joya
              Data.Properties.VarNames{11} = 'DYCOL09';%is important; 1:shagel 2:joya
         else
+            
             Data.Properties.VarNames{9} = 'DYCOL09';%is important; 1:shagel 2:joya
         end
         Data.Properties.VarNames{10} = 'DYCOL10';
@@ -132,7 +130,7 @@ for r=0:1
         if Ismonth==1
         Data=join(Data,MData,'key','Address','Type','outer','MergeKeys',true);
         %Data.MahMorajeh(strcmp(Data.MahMorajeh,{''}))={'00'};
-        Data.MahMorajeh=cell2num(Data.MahMorajeh);
+        
         else
             Data.MahMorajeh=13*ones(size(Data.Address,1),1);
         end
@@ -273,7 +271,7 @@ end
 %%
 Adres = 'E:\Data\HouseHoldExpenditure\Access\';
 
-if Y > 88 
+if Y == 89 || Y==90 
     Fname = [num2str(Y) '.accdb'];% '"89\89.accdb"
 else%if Y > 82 
     Fname = [num2str(Y) '.mdb'];
